@@ -11,7 +11,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet
 
 # Your VirusTotal API Key 
-API_KEY = "4246944f1b6d6cef872a096faa6d75d906224a8e174639e50660d8af6b195c83"
+API_KEY = "YOUR_API_KEY"
 
 def show_banner():
     print("""
