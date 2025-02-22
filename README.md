@@ -7,7 +7,7 @@ VTxBulkHashLookup (v.2.0) is a Python-based tool that checks file hashes against
 - **Bulk Hash Scanning** – Process multiple hashes at once.
 - **VirusTotal API Integration** – Uses VirusTotal’s API to fetch scan results.
 - **Hash Type Detection** – Automatically identifies **MD5**, **SHA-1**, and **SHA-256** hashes.
-- **Structured Output** – Saves results in **CSV (comma-separated)**, **TXT (tab-separated)**, and **PDF (formatted)** formats.
+- **Structured Output** – Saves results in **CSV (comma-separated)**, **TXT (tab-separated)**, **PDF (formatted)** and **JSON** formats.
 - **Error Handling** – Gracefully handles missing hashes, API failures, and rate limits.
 
 ## Installation
@@ -31,10 +31,10 @@ Edit `VTxBulkHashLookup.py` and replace `<YOUR API KEY>` with your **VirusTotal 
 
 ## Usage
 
-Run the script with an input file containing hashes, specifying output files for CSV, TXT, or PDF:
+Run the script with an input file containing hashes, specifying output files for CSV, TXT, PDF or JSON:
 
 ```bash
-python VTxBulkHashLookup.py hash.txt -o results.csv -t results.txt -p results.pdf
+python VTxBulkHashLookup.py hash.txt -o results.csv -t results.txt -p results.pdf -j results.json
 ```
 
 ### Command-line Arguments
@@ -45,6 +45,7 @@ python VTxBulkHashLookup.py hash.txt -o results.csv -t results.txt -p results.pd
 | `-o results.csv` | Output CSV file for structured results |
 | `-t results.txt` | Output TXT file for tabular format |
 | `-p results.pdf` | Output PDF file for formatted results |
+| `-j results.json` | Output JSON file for formatted results |
 
 ## Example
 
@@ -59,7 +60,7 @@ python VTxBulkHashLookup.py hash.txt -o results.csv -t results.txt -p results.pd
 ### Execution:
 
 ```bash
-python VTxBulkHashLookup.py hashes.txt -o scan_results.csv -t scan_results.txt -p scan_results.pdf
+python VTxBulkHashLookup.py hashes.txt -o scan_results.csv -t scan_results.txt -p scan_results.pdf -j scan_results.json
 ```
 
 ### CSV Output (`scan_results.csv`):
@@ -95,6 +96,49 @@ A well-structured **PDF report** containing tables with VirusTotal scan results 
 - **Malicious**
 - **Threat Label**
 - **Tags**
+
+### JSON Output (`scan_results.json`):
+
+```json
+    [
+    {
+        "Hash": "4F0163E434BD1CD301241427A3D4E705",
+        "Hash Type": "MD5",
+        "VirusTotal Link": "https://www.virustotal.com/gui/file/4F0163E434BD1CD301241427A3D4E705",
+        "File Name": "MicrosoftRuntimeUpdate.vbe",
+        "File Type": "unknown",
+        "Undetected": 28,
+        "Suspicious": 0,
+        "Malicious": 32,
+        "Threat Label": "trojan.redeshaca",
+        "Tags": "idle, long-sleeps"
+    },
+    {
+        "Hash": "6D8895C63A77EBE5E49B656BDEFDB822",
+        "Hash Type": "MD5",
+        "VirusTotal Link": "https://www.virustotal.com/gui/file/6D8895C63A77EBE5E49B656BDEFDB822",
+        "File Name": "Malware.stage0.exe.malz",
+        "File Type": "Win32 EXE",
+        "Undetected": 15,
+        "Suspicious": 0,
+        "Malicious": 57,
+        "Threat Label": "trojan.shellcode/swrort",
+        "Tags": "peexe, direct-cpu-clock-access, long-sleeps, detect-debug-environment, checks-user-input, persistence, overlay"
+    },
+    {
+        "Hash": "24D004A104D4D54034DBCFFC2A4B19A11F39008A575AA614EA04703480B1022C",
+        "Hash Type": "SHA256",
+        "VirusTotal Link": "https://www.virustotal.com/gui/file/24D004A104D4D54034DBCFFC2A4B19A11F39008A575AA614EA04703480B1022C",
+        "File Name": "lhdfrgui.exe",
+        "File Type": "Win32 EXE",
+        "Undetected": 4,
+        "Suspicious": 0,
+        "Malicious": 72,
+        "Threat Label": "trojan.wannacry/wanna",
+        "Tags": "checks-user-input, malware, detect-debug-environment, exploit, direct-cpu-clock-access, peexe, cve-2017-0147, checks-network-adapters, macro-create-ole, runtime-modules, long-sleeps, cve-2017-0144"
+    }
+]
+```
 
 ## Notes & Limitations
 
