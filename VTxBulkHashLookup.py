@@ -11,7 +11,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet
 
 # Your VirusTotal API Key 
-API_KEY = "YOUR_API_KEY"
+API_KEY = "4246944f1b6d6cef872a096faa6d75d906224a8e174639e50660d8af6b195c83"
 
 def show_banner():
     print("""
@@ -72,12 +72,61 @@ def check_virustotal(hash_value):
         print(f"Error fetching data for {hash_value}: {e}")
         return [hash_value, detect_hash_type(hash_value), "Error", "Error", "Error", "Error", "Error", "Error", "Error", "Error"]
 
+def export_to_txt(data, output_txt):
+    with open(output_txt, mode="w") as file:
+        file.write("Hash\tHash Type\tVirusTotal Link\tFile Name\tFile Type\tUndetected\tSuspicious\tMalicious\tThreat Label\tTags\n")
+        for row in data:
+            file.write("\t".join(map(str, row)) + "\n")
+    print(f"TXT report saved: {output_txt}")
+
 def export_to_csv(data, output_csv):
     with open(output_csv, mode="w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Hash", "Hash Type", "VirusTotal Link", "File Name", "File Type", "Undetected", "Suspicious", "Malicious", "Threat Label", "Tags"])
         writer.writerows(data)
     print(f"[*]CSV report saved: {output_csv}")
+
+def export_to_pdf(data, output_pdf):
+    doc = SimpleDocTemplate(output_pdf, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+    title = Paragraph("VirusTotal Hash Analysis Report", styles['Title'])
+    elements.append(title)
+    elements.append(Spacer(1, 12))
+
+    for row in data:
+        hash_value, hash_type, vt_link, file_name, file_type, undetected, suspicious, malicious, threat_label, tags = row
+
+        table_data = [
+            ["Field", "Value"],
+            ["Hash", hash_value],
+            ["Hash Type", hash_type],
+            ["VirusTotal Link", vt_link],
+            ["File Name", file_name],
+            ["File Type", file_type],
+            ["Undetected", undetected],
+            ["Suspicious", suspicious],
+            ["Malicious", malicious],
+            ["Threat Label", threat_label],
+            ["Tags", tags]
+        ]
+
+        table = Table(table_data, colWidths=[150, 350])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+
+        elements.append(table)
+        elements.append(Spacer(1, 12))  # Space between tables
+
+    doc.build(elements)
+    print(f"PDF report saved: {output_pdf}")
 
 def show_usage():
     print("\nUsage: python VTxBulkHashLookup.py <input_file> -o <output_csv> -t <output_txt> -p <output_pdf>")
@@ -86,9 +135,34 @@ def show_usage():
     print("  -o <output_csv> - CSV output file")
     print("  -t <output_txt> - TXT output file")
     print("  -p <output_pdf> - PDF output file")
+    print("  -j <output_json> - JSON output file")
     print("\nExample:")
     print("  python VTxBulkHashLookup.py hashes.txt -o results.csv -t results.txt -p results.pdf\n")
     sys.exit(1)
+
+def export_to_json(data, output_json):
+    json_results = []
+
+    for item in data:
+        hash_value, hash_type, vt_link, file_name, file_type, undetected, suspicious, malicious, threat_label, tags = item
+        json_entry = {
+            "Hash": hash_value,
+            "Hash Type": hash_type,
+            "VirusTotal Link": vt_link,
+            "File Name": file_name,
+            "File Type": file_type,
+            "Undetected": undetected,
+            "Suspicious": suspicious,
+            "Malicious": malicious,
+            "Threat Label": threat_label,
+            "Tags": tags
+        }
+        json_results.append(json_entry)
+
+    with open(output_json, "w") as json_file:
+        json.dump(json_results, json_file, indent=4)
+
+    print(f"[*] JSON report saved: {output_json}")
 
 
 def main():
@@ -98,10 +172,11 @@ def main():
     parser.add_argument("-o", "--output_csv", help="CSV output file", required=False)
     parser.add_argument("-t", "--output_txt", help="TXT output file", required=False)
     parser.add_argument("-p", "--output_pdf", help="PDF output file", required=False)
+    parser.add_argument("-j", "--output_json",help="JSON output file", required =False)
 
     args = parser.parse_args()
 
-    if not any([args.output_csv, args.output_txt, args.output_pdf]):
+    if not any([args.output_csv, args.output_txt, args.output_pdf, args.output_json]):
         show_usage()
 
     try:
@@ -118,8 +193,18 @@ def main():
             results.append(check_virustotal(hash_value))
             time.sleep(15)  
 
+
         if args.output_csv:
             export_to_csv(results, args.output_csv)
+
+        if args.output_txt:
+            export_to_txt(results, args.output_txt)
+
+        if args.output_pdf:
+            export_to_pdf(results, args.output_pdf)
+        
+        if args.output_json:
+            export_to_json(results, args.output_json)
 
         print("[*] Report generation completed.")
 
@@ -129,3 +214,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
