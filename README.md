@@ -112,7 +112,7 @@ A well-structured **PDF report** containing tables with VirusTotal scan results 
 - Parsing:
     - Add more export formats:
         - ✅PDF (Added)
-        - JSON
+        - ✅JSON (Added)
     - Add more input and search options
 - OCR:
     - Add OCR functionality to look up hashes directly from Threat Reports
@@ -121,6 +121,14 @@ A well-structured **PDF report** containing tables with VirusTotal scan results 
     - Add summarization of the threats input to the tool
 - Support Multiple API keys for faster results
 - Support input of a folder with suspicious files, evaluate hashes, and perform the VT lookup
+
+## Changelogs
+- v0.1
+    - Initial release of tool
+- v0.2
+    - Added PDF Export features and Improved Error Handling
+- v0.3
+    -Added JSON Export
 
 ## Contributions
 
