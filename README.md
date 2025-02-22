@@ -172,7 +172,7 @@ A well-structured **PDF report** containing tables with VirusTotal scan results 
 - v0.2
     - Added PDF Export features and Improved Error Handling
 - v0.3
-    -Added JSON Export
+    - Added JSON Export
 
 ## Contributions
 
