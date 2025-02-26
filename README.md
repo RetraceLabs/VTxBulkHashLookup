@@ -1,6 +1,6 @@
 # VTxBulkHashLookup - VirusTotal Hash Scanner
 
-VTxBulkHashLookup (v.2.0) is a Python-based tool that checks file hashes against the VirusTotal database to identify potential threats. It supports **batch scanning** and exports structured results in **CSV**, **TXT**, and now **PDF** formats.
+VTxBulkHashLookup is a Python-based tool that checks file hashes against the VirusTotal database to identify potential threats. It supports **batch scanning** and exports structured results in **CSV**, **TXT**, **PDF** and **JSON** formats.
 
 ## Features
 
@@ -166,7 +166,7 @@ A well-structured **PDF report** containing tables with VirusTotal scan results 
 - Support Multiple API keys for faster results
 - Support input of a folder with suspicious files, evaluate hashes, and perform the VT lookup
 
-## Changelogs
+## Changelog:
 - v0.1
     - Initial release of tool
 - v0.2
